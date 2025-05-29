@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+    #test-container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #sample-text { font-size: 18px; margin-bottom: 20px; }
+    textarea { width: 100%; height: 150px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    #results { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div id="test-container">
+    <h2>Typing Test</h2>
+    <div id="sample-text">
+      The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet and is commonly used for typing practice.
+    </div>
+    <textarea id="input-text" placeholder="Start typing here when ready..."></textarea>
+    <br>
+    <button onclick="submitTest()">Submit</button>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    let startTime;
+    let hasStarted = false;
+    const sampleText = document.getElementById("sample-text").innerText;
+
+    document.getElementById("input-text").addEventListener("input", function() {
+      if (!hasStarted) {
+        hasStarted = true;
+        startTime = new Date();
+      }
+    });
+
+    function submitTest() {
+      const endTime = new Date();
+      const typedText = document.getElementById("input-text").value;
+      const timeTaken = (endTime - startTime) / 1000 / 60; // in minutes
+
+      const typedWords = typedText.trim().split(/\s+/).length;
+      const originalWords = sampleText.trim().split(/\s+/);
+      const inputWords = typedText.trim().split(/\s+/);
+
+      let correctWords = 0;
+      for (let i = 0; i < Math.min(originalWords.length, inputWords.length); i++) {
+        if (originalWords[i] === inputWords[i]) correctWords++;
+      }
+
+      const accuracy = ((correctWords / originalWords.length) * 100).toFixed(2);
+      const wpm = Math.round(typedWords / timeTaken);
+
+      document.getElementById("results").innerHTML = `
+        <p>Words Per Minute (WPM): <strong>${wpm}</strong></p>
+        <p>Accuracy: <strong>${accuracy}%</strong></p>
+      `;
+    }
+  </script>
+</body>
+</html>

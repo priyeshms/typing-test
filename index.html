@@ -11,31 +11,57 @@
     textarea { width: 100%; height: 150px; font-size: 16px; }
     button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
     #results { margin-top: 20px; font-weight: bold; }
+    .hidden { display: none; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
   <div id="test-container">
     <h2>Typing Test</h2>
-    <div id="sample-text">
-      The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet and is commonly used for typing practice.
+
+    <div id="user-form">
+      <input type="text" id="first-name" placeholder="First Name" required>
+      <input type="text" id="last-name" placeholder="Last Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <button onclick="startTest()">Start Test</button>
     </div>
-    <textarea id="input-text" placeholder="Start typing here when ready..."></textarea>
-    <br>
-    <button onclick="submitTest()">Submit</button>
-    <div id="results"></div>
+
+    <div id="typing-test" class="hidden">
+      <div id="sample-text">
+        The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet and is commonly used for typing practice.
+      </div>
+      <textarea id="input-text" placeholder="Start typing here when ready..."></textarea>
+      <br>
+      <button onclick="submitTest()">Submit</button>
+      <div id="results"></div>
+    </div>
   </div>
 
   <script>
     let startTime;
     let hasStarted = false;
-    const sampleText = document.getElementById("sample-text").innerText;
+    const sampleText = "The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet and is commonly used for typing practice.";
 
-    document.getElementById("input-text").addEventListener("input", function() {
-      if (!hasStarted) {
-        hasStarted = true;
-        startTime = new Date();
+    function startTest() {
+      const firstName = document.getElementById("first-name").value;
+      const lastName = document.getElementById("last-name").value;
+      const email = document.getElementById("email").value;
+
+      if (!firstName || !lastName || !email) {
+        alert("Please fill in all details before starting the test.");
+        return;
       }
-    });
+
+      document.getElementById("user-form").classList.add("hidden");
+      document.getElementById("typing-test").classList.remove("hidden");
+
+      document.getElementById("input-text").addEventListener("input", function() {
+        if (!hasStarted) {
+          hasStarted = true;
+          startTime = new Date();
+        }
+      });
+    }
 
     function submitTest() {
       const endTime = new Date();
@@ -58,6 +84,16 @@
         <p>Words Per Minute (WPM): <strong>${wpm}</strong></p>
         <p>Accuracy: <strong>${accuracy}%</strong></p>
       `;
+
+      // Email logic
+      const firstName = document.getElementById("first-name").value;
+      const lastName = document.getElementById("last-name").value;
+      const email = document.getElementById("email").value;
+
+      const body = `Name: ${firstName} ${lastName}%0AEmail: ${email}%0AWPM: ${wpm}%0AAccuracy: ${accuracy}%`;
+      const mailtoLink = `mailto:priyeshms9@gmail.com?subject=Typing Test Result from ${firstName} ${lastName}&body=${body}`;
+
+      window.location.href = mailtoLink;
     }
   </script>
 </body>
